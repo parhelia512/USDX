@@ -207,6 +207,7 @@ begin
        (not FileName.Equals('..')) and
        (not FileName.Equals('')) then
     begin
+      Log.LogDebug('Recursing: ' + StartDir.Append(FileName).ToWide, 'TSongs.FindFilesByExtension');
       SubDirs := CollectDirectories(StartDir.Append(FileName), true);
       SubDirCount := Length(SubDirs);
       if SubDirCount > 0 then
