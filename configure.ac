@@ -131,17 +131,6 @@ AC_ARG_ENABLE(debug,
   [test $enableval = "yes" && ENABLE_DEBUG="yes"], [])
 AC_SUBST(ENABLE_DEBUG)
 
-if [[ "$host_os" == *darwin* ]]; then
-  MACOS_PACKAGING="brew"
-  MACOS_PACKAGING_LIBDIR="$(brew --prefix)/lib"
-else
-  MACOS_PACKAGING=""
-  MACOS_PACKAGING_LIBDIR=""
-fi
-
-AC_SUBST(MACOS_PACKAGING, $MACOS_PACKAGING)
-AC_SUBST(MACOS_PACKAGING_LIBDIR, $MACOS_PACKAGING_LIBDIR)
-
 # -----------------------------------------
 # check for compilers
 # -----------------------------------------
@@ -188,7 +177,25 @@ fi
 # -----------------------------------------
 
 if test x$FPC_PLATFORM = xdarwin; then
-   AC_MACOS_VERSION
+    AC_MACOS_VERSION
+    
+    if command -v brew >/dev/null 2>&1; then
+        MACOS_PACKAGING="brew"
+        MACOS_PACKAGING_LIBDIR="$(brew --prefix)/lib"
+    else
+        MACOS_PACKAGING="none"
+        MACOS_PACKAGING_LIBDIR="/usr/local/lib"
+        
+        AC_MSG_WARN([
+!!! Homebrew was not found. 
+!!! It is highly recommended to install Homebrew on macOS to manage dependencies.
+!!! Visit https://brew.sh for installation instructions.
+!!! Proceeding with system default paths, which might fail.
+        ])
+    fi
+    
+    AC_SUBST([MACOS_PACKAGING])
+    AC_SUBST([MACOS_PACKAGING_LIBDIR])
 fi
 
 # -----------------------------------------
@@ -498,7 +505,7 @@ AC_SUBST(PFLAGS_EXTRA)
 
 # determine linker-flags
 if test x$FPC_PLATFORM = xdarwin; then
-  LDFLAGS="-macos_version_min 10.8 -undefined dynamic_lookup -headerpad_max_install_names"
+    LDFLAGS="-macos_version_min 10.8 -undefined dynamic_lookup -headerpad_max_install_names"
 fi
 #LIBS=
 AC_SUBST(LDFLAGS)
@@ -536,7 +543,7 @@ AC_MSG_NOTICE([
 !!! For further information on $PACKAGE_NAME visit:
 !!!   $PACKAGE_WEBSITE
 !!!
-!!! In case you find a bug send a bugreport to:
+!!! In case you find a bug, please send a bug report to:
 !!!   $PACKAGE_BUGREPORT
 !!! You might as well ask for help on Discord
 !!!   $PACKAGE_DISCORD
@@ -548,7 +555,7 @@ if test x$FPC_PLATFORM = xdarwin; then
 !!! Special target for macOS are:
 !!! "make macos-standalone-app" to create a standalone .app
 !!! "make macos-dmg" to create a dmg archive with standalone .app
-!!! Selected packaging: $MACOS_PACKAGING with libdir $MACOS_PACKAGING_LIBDIR
+!!! Packaging with $MACOS_PACKAGING and libdir $MACOS_PACKAGING_LIBDIR.
                    ])
 fi
 
