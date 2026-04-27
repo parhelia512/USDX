@@ -261,7 +261,6 @@ implementation
 
 uses
   UCommon,
-  UCovers,
   UDisplay,
   UDrawTexture,
   UGraphic,

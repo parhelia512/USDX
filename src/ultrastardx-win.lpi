@@ -69,10 +69,6 @@
         <Filename Value="base\UCommon.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit5>
-      <Unit6>
-        <Filename Value="base\UCovers.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit6>
       <Unit7>
         <Filename Value="base\UDataBase.pas"/>
         <IsPartOfProject Value="True"/>

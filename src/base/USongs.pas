@@ -167,7 +167,6 @@ implementation
 uses
   StrUtils,
   SDL2,
-  UCovers,
   UFiles,
   UGraphic,
   UMain,
@@ -309,9 +308,6 @@ begin
 
     if assigned(CatCovers) then
       CatCovers.Load;
-
-    //if assigned(Covers) then
-    //  Covers.Load;
 
     if assigned(ScreenSong)  then
     begin

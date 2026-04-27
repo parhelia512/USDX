@@ -63,10 +63,6 @@
         <Filename Value="base/UCoreModule.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit7>
-      <Unit8>
-        <Filename Value="base/UCovers.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit8>
       <Unit9>
         <Filename Value="base/UDLLManager.pas"/>
         <IsPartOfProject Value="True"/>
