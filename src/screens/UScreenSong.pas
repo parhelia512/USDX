@@ -326,7 +326,6 @@ implementation
 
 uses
   UAudioPlaybackBase,
-  UCovers,
   UGraphic,
   UHelp,
   ULog,
@@ -2022,7 +2021,6 @@ var
   I: integer;
   CoverButtonIndex: integer;
   CoverButton: TButton;
-  Cover: TCover;
   CoverFile: IPath;
   Song: TSong;
   Event: TSDL_Event;
@@ -2057,50 +2055,10 @@ begin
     if (Song.Cover.IsUnset) then
       CoverFile := Skin.GetTextureFileName('SongCover');
 
-    // load cover and cache its texture
-    Cover := Covers.FindCover(CoverFile);
-    if (Cover = nil) then
-      Cover := Covers.AddCover(CoverFile);
-
-    // use the cached texture
-    // TODO: this is a workaround until the new song-loading works.
-    // The TCover object should be added to the song-object. The thumbnails
-    // should be loaded each time the song-screen is shown (it is real fast).
-    // This way, we will not waste that much memory and have a link between
-    // song and cover.
-
-    if (Cover <> nil) then
-    begin
-      //Texture.AddTexture(CoverTexture, TEXTURE_TYPE_PLAIN, false);
-      CoverButton.Texture := Cover.GetEmptyTexture();
-      Song.CoverTex := CoverButton.Texture;  //basisbit ToDo 11.11.2015
-      glDeleteTextures(1, @CoverButton.Texture.TexNum);
-      CoverButton.Texture.TexNum := 0;
-      // set selected to false -> the right texture will be displayed
-      CoverButton.Selected := False;
-    end
-    else
-    begin
-      Song.Cover := PATH_NONE;
-      if (Song.Cover.IsUnset) then
-      CoverFile := Skin.GetTextureFileName('SongCover');
-      Log.LogInfo(CoverFile.ToNative(), 'Test');
-      // load cover and cache its texture
-      Cover := Covers.FindCover(CoverFile);
-      if (Cover = nil) then
-        Cover := Covers.AddCover(CoverFile);
-      if (Cover <> nil) then
-      begin
-        //Texture.AddTexture(CoverTexture, TEXTURE_TYPE_PLAIN, false);
-        CoverButton.Texture := Cover.GetPreviewTexture();
-        Song.CoverTex := CoverButton.Texture;  //basisbit ToDo 11.11.2015
-        glDeleteTextures(1, @CoverButton.Texture.TexNum);
-        CoverButton.Texture.TexNum := 0;
-        // set selected to false -> the right texture will be displayed
-        CoverButton.Selected := False;
-      end
-    end;
-    Cover.Free;
+    CoverButton.Texture := Default(TTexture);
+    CoverButton.Texture.Name := CoverFile;
+    Song.CoverTex := CoverButton.Texture;
+    CoverButton.Selected := False;
   end;
 
   // reset selection
@@ -2166,7 +2124,7 @@ begin
     glDeleteTextures(1, PGLuint(@Button[Interaction].Texture.TexNum));
     Button[Interaction].Texture.TexNum := 0;
   end;
-  Button[Interaction].Texture := Covers.FindCover(Button[Interaction].Texture.Name).GetTexture();}
+  Button[Interaction].Texture := Texture.LoadTexture(Button[Interaction].Texture.Name);}
   //basisbit todo here
 end;
 
@@ -2679,7 +2637,7 @@ begin
     glDeleteTextures(1, PGLuint(@Statics[StaticActual].Texture.TexNum));
   end;
 
-  Statics[StaticActual].Texture := Covers.FindCover(Button[Interaction].Texture.Name).GetTexture();
+  Statics[StaticActual].Texture := Texture.LoadTexture(Button[Interaction].Texture.Name);
   Statics[StaticActual].Texture.Alpha := 1;
 
   Statics[StaticActual].Texture.X := Theme.Song.Cover.SelectX;
@@ -2754,7 +2712,7 @@ begin
     glDeleteTextures(1, PGLuint(@Statics[StaticActual].Texture.TexNum));
   end;
 
-  Statics[StaticActual].Texture := Covers.FindCover(Button[Interaction].Texture.Name).GetTexture();
+  Statics[StaticActual].Texture := Texture.LoadTexture(Button[Interaction].Texture.Name);
   Statics[StaticActual].Texture.Alpha := 1;
 
   Statics[StaticActual].Texture.X := Theme.Song.Cover.SelectX;
@@ -4205,7 +4163,7 @@ procedure TScreenSong.LoadCover(NumberOfButtonInArray: integer);
 begin
   If (Button[NumberOfButtonInArray].Texture.TexNum = 0) and Assigned(Button[NumberOfButtonInArray].Texture.Name) then
   begin
-    Button[NumberOfButtonInArray].Texture := Covers.FindCover(Button[NumberOfButtonInArray].Texture.Name).GetTexture();
+    Button[NumberOfButtonInArray].Texture := Texture.LoadTexture(Button[NumberOfButtonInArray].Texture.Name);
   end;
 end;
 

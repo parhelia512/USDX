@@ -47,7 +47,6 @@ uses
   UCatCovers,
   USongs,
   UAvatars,
-  UCovers,
   UMusic,
   UScreenLoading,
   UScreenMain,
@@ -519,12 +518,9 @@ begin
   Log.LogStatus('Loading Loading Screen', 'UGraphic.Initialize3D');
   LoadLoadingScreen;
 
-  // Covers Cache
+  // Category Covers
   SDL_SetWindowTitle(Screen, PChar(Title + ' - Loading and checking songs'));
   Log.LogStatus('Loading and checking songs', 'UGraphic.Initialize3D');
-  Covers := TCoverDatabase.Create;
-
-  // Category Covers
   Log.LogStatus('Creating Category Covers Array', 'Initialization');
   CatCovers:= TCatCovers.Create;
 

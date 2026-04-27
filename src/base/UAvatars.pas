@@ -156,7 +156,7 @@ begin
 end;
 
 
-{ TCoverDatabase }
+{ TAvatarDatabase }
 
 constructor TAvatarDatabase.Create();
 begin
@@ -499,4 +499,3 @@ begin
 end;
 
 end.
-
